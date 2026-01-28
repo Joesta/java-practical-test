@@ -1,5 +1,6 @@
 package com.globalkinetic.practical_test.models;
 
+import com.globalkinetic.practical_test.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,11 +13,8 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "users")
-@Setter
-@Getter
+@Data
 @ToString
-@AllArgsConstructor
-@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,4 +24,6 @@ public class User {
     private String phone;
     @CreationTimestamp
     private Instant createdAt;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

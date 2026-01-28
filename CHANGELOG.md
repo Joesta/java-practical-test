@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Add
 - UserDTO
 - Exposed getAllUsers API. 
+- Exposed login API
+- JWT Service and Filters
+- Security Config
+- Secured API
+- JWT Secrets and Expiration time
+- Implemented UserDetails
+- Encrypt password using bCrypt
 
 ## 2026-01-29
 ## Change
