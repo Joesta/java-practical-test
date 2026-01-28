@@ -30,6 +30,7 @@ public class UserService {
     }
 
     public void createUser(UserRequestDTO userReq) {
+        System.out.println(userReq);
         User user = userMapper.toUserEntity(userReq);
         userRepo.save(user);
     }
