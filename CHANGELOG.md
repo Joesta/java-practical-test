@@ -7,15 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## 2026-01-29
+## Add
+- UserDTO
+- Exposed getAllUsers API. 
+
+## 2026-01-29
+## Change
+- Modify UserMapper to be match the response body code from the project spec.
+
+
 ## 2026-01-28
 ### Added
- - UserController *Handles API requests*
- - UserRepo
- - UserService
- - UserMapper
- - User - *entity*
- - UserResponseDTO
- - LoginResponseDTO
- - LogoutResponseDTO
- - UserRequestDTO
- - LoginRequestDTO
+- UserController *Handles API requests*
+- UserRepo
+- UserService
+- UserMapper
+- User - *entity*
+- UserResponseDTO
+- LoginResponseDTO
+- LogoutResponseDTO
+- UserRequestDTO
+- LoginRequestDTO
+

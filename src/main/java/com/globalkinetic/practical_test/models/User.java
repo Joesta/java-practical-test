@@ -12,7 +12,8 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "users")
-@Data
+@Setter
+@Getter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor

@@ -1,9 +1,11 @@
 package com.globalkinetic.practical_test.mappers;
 
+import com.globalkinetic.practical_test.dto.UserDTO;
 import com.globalkinetic.practical_test.dto.UserRequestDTO;
 import com.globalkinetic.practical_test.dto.UserResponseDTO;
 import com.globalkinetic.practical_test.models.User;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
@@ -14,6 +16,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     User toUserEntity(UserRequestDTO userRequestDTO);
-    UserResponseDTO toUserResponse(User user);
-    List<UserResponseDTO> toUserResponseDTOList(List<User> users);
+    List<UserDTO> toUserDTOList(List<User> users);
+    default UserResponseDTO toUserResponseDTOList(List<User> users) {
+        return new UserResponseDTO(toUserDTOList(users));
+    }
 }
