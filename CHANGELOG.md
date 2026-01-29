@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add default role for all new users. 
 - Validation Aspect
 - GlobalException Handler
+- Add role claims
 
 ## 2026-01-29
 ## Change
