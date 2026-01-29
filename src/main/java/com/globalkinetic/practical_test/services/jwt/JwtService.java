@@ -1,11 +1,15 @@
 package com.globalkinetic.practical_test.services.jwt;
 
+import com.globalkinetic.practical_test.models.BlacklistedToken;
+import com.globalkinetic.practical_test.repository.BlacklistedTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +17,7 @@ import javax.crypto.SecretKey;
 import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.function.Function;
 
 /**
@@ -24,6 +29,12 @@ public class JwtService {
 
     private final SecretKey key;
     private final long expirationMs;
+    private BlacklistedTokenRepository jwtRepository;
+
+    @Autowired
+    public void setJwtRepository(BlacklistedTokenRepository jwtRepository) {
+        this.jwtRepository = jwtRepository;
+    }
 
     public JwtService(@Value("${jwt.secret}") String secret, @Value("${jwt.expiration-ms}") Duration expiration) {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
@@ -35,12 +46,13 @@ public class JwtService {
         this.expirationMs = expiration.toMillis();
     }
     public String generateToken(String username) {
-
+        String jti = UUID.randomUUID().toString();
         HashMap<String, Object> claims = new HashMap<>();
         claims.put("role", "USER");
 
         return Jwts.builder()
                 .setClaims(claims)
+                .setId(jti)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
@@ -52,7 +64,11 @@ public class JwtService {
        return extractClaim(token, Claims::getSubject);
     }
 
-    private Date getExpiration(String token) {
+    public String extractJti(String token) {
+        return extractClaim(token, Claims::getId);
+    }
+
+    public Date getExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
