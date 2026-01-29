@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add role claims
 - Exposed Logout API, add blacklist service to invalidate token after logout. 
 - Add validation to guard against making requests after logout. 
+- Remove Postgres Driver and add H2 Driver to use In-Memory DB
 
 ## 2026-01-29
 ## Change
