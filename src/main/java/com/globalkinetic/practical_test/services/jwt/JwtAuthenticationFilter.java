@@ -2,6 +2,7 @@ package com.globalkinetic.practical_test.services.jwt;
 
 
 import com.globalkinetic.practical_test.models.User;
+import com.globalkinetic.practical_test.repository.BlacklistedTokenRepository;
 import com.globalkinetic.practical_test.repository.UserRepo;
 import com.globalkinetic.practical_test.services.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
@@ -28,7 +29,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService;
     private UserRepo userRepo;
     private ApplicationContext appContext;
+    private BlacklistedTokenRepository blacklistedTokenRepository;
 
+
+    @Autowired
+    public void setBlacklistedTokenRepository(BlacklistedTokenRepository blacklistedTokenRepository) {
+        this.blacklistedTokenRepository = blacklistedTokenRepository;
+    }
 
     @Autowired
     public void setAppContext(ApplicationContext appContext) {
@@ -66,6 +73,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (user != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = appContext.getBean(UserDetailsServiceImpl.class).loadUserByUsername(username);
                 if (jwtService.validateToken(token, userDetails)) {
+                    String jti = jwtService.extractJti(token);
+                    if (blacklistedTokenRepository.existsById(jti)) {
+                        throw new ServletException("JWT token expired. Please login again");
+                    }
+
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null , userDetails.getAuthorities());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
