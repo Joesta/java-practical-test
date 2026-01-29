@@ -28,10 +28,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove Postgres Driver and add H2 Driver to use In-Memory DB
 - Change logout endpoint to return LogoutResponseDTO
 
+
 ## 2026-01-29
 ## Change
 - Modify UserMapper to be match the response body code from the project spec.
-
+- Fix JwtAuthenticationFilter to use JwtBlackList::isBlackListed method instead of repository. 
 
 ## 2026-01-28
 ### Added
