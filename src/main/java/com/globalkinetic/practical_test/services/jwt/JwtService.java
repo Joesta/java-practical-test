@@ -1,6 +1,5 @@
 package com.globalkinetic.practical_test.services.jwt;
 
-import com.globalkinetic.practical_test.models.BlacklistedToken;
 import com.globalkinetic.practical_test.repository.BlacklistedTokenRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -9,7 +8,6 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -31,11 +29,6 @@ public class JwtService {
     private final long expirationMs;
     private BlacklistedTokenRepository jwtRepository;
 
-    @Autowired
-    public void setJwtRepository(BlacklistedTokenRepository jwtRepository) {
-        this.jwtRepository = jwtRepository;
-    }
-
     public JwtService(@Value("${jwt.secret}") String secret, @Value("${jwt.expiration-ms}") Duration expiration) {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         if (keyBytes.length < 32) {
@@ -45,6 +38,12 @@ public class JwtService {
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.expirationMs = expiration.toMillis();
     }
+
+    @Autowired
+    public void setJwtRepository(BlacklistedTokenRepository jwtRepository) {
+        this.jwtRepository = jwtRepository;
+    }
+
     public String generateToken(String username) {
         String jti = UUID.randomUUID().toString();
         HashMap<String, Object> claims = new HashMap<>();
@@ -61,7 +60,7 @@ public class JwtService {
     }
 
     public String getUsername(String token) {
-       return extractClaim(token, Claims::getSubject);
+        return extractClaim(token, Claims::getSubject);
     }
 
     public String extractJti(String token) {

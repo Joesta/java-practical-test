@@ -3,10 +3,7 @@ package com.globalkinetic.practical_test.aop;
 import com.globalkinetic.practical_test.dto.LoginRequestDTO;
 import com.globalkinetic.practical_test.exceptions.CredentialsRequiredException;
 import com.globalkinetic.practical_test.models.UserPrincipal;
-import com.globalkinetic.practical_test.repository.BlacklistedTokenRepository;
-import com.globalkinetic.practical_test.services.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
@@ -24,8 +21,6 @@ import org.springframework.stereotype.Component;
 public class ValidationAspect {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(ValidationAspect.class);
-    private final BlacklistedTokenRepository blacklistedTokenRepository;
-    private final JwtService jwtService;
 
     @Before("execution(* com.globalkinetic.practical_test.services.AuthService.login(..)) && args(loginReq) ")
     public void validateLogin(LoginRequestDTO loginReq) {
