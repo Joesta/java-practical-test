@@ -1,5 +1,6 @@
 package com.globalkinetic.practical_test.services.jwt;
 
+import com.globalkinetic.practical_test.dto.LogoutResponseDTO;
 import com.globalkinetic.practical_test.models.BlacklistedToken;
 import com.globalkinetic.practical_test.repository.BlacklistedTokenRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class JwtBlacklistService {
     private final BlacklistedTokenRepository blacklistedTokenRepository;
     private final JwtService jwtService;
 
-    public void blacklist(Long userId, String authHeader, Authentication authentication) {
+    public LogoutResponseDTO blacklist(Long userId, String authHeader, Authentication authentication) {
 
         String token = authHeader.substring(7);
 
@@ -26,6 +27,8 @@ public class JwtBlacklistService {
         blacklistedToken.setJti(jwtService.extractJti(token));
         blacklistedToken.setExpiresAt(jwtService.getExpiration(token).toInstant());
         blacklistedTokenRepository.save(blacklistedToken);
+
+        return new LogoutResponseDTO(token);
     }
 
     public boolean isBlacklisted(String jti) {
