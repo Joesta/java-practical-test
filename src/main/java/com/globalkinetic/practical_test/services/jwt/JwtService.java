@@ -1,6 +1,6 @@
 package com.globalkinetic.practical_test.services.jwt;
 
-import com.globalkinetic.practical_test.repository.BlacklistedTokenRepository;
+import com.globalkinetic.practical_test.repository.UserRepo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -27,8 +27,9 @@ public class JwtService {
 
     private final SecretKey key;
     private final long expirationMs;
+    private final UserRepo userRepo;
 
-    public JwtService(@Value("${jwt.secret}") String secret, @Value("${jwt.expiration-ms}") Duration expiration) {
+    public JwtService(UserRepo userRepo, @Value("${jwt.secret}") String secret, @Value("${jwt.expiration-ms}") Duration expiration) {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         if (keyBytes.length < 32) {
             throw new IllegalArgumentException("JWT secret must be at least 256 bits (32 bytes)");
@@ -36,12 +37,19 @@ public class JwtService {
 
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.expirationMs = expiration.toMillis();
+        this.userRepo = userRepo;
     }
 
     public String generateToken(String username) {
         String jti = UUID.randomUUID().toString();
         HashMap<String, Object> claims = new HashMap<>();
-        claims.put("role", "USER");
+
+        String role = userRepo
+                .findByUsername(username)
+                .getRole()
+                .name();
+
+        claims.put("role", role);
 
         return Jwts.builder()
                 .setClaims(claims)

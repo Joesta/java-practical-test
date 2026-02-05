@@ -1,5 +1,6 @@
 package com.globalkinetic.practical_test.models;
 
+import jakarta.annotation.Nonnull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,8 +21,9 @@ public class UserPrincipal implements UserDetails {
     }
 
     @Override
+    @Nonnull
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority(String.format("ROLE_%s", user.getRole())));
     }
 
     @Override
@@ -30,6 +32,7 @@ public class UserPrincipal implements UserDetails {
     }
 
     @Override
+    @Nonnull
     public String getUsername() {
         return user.getUsername();
     }
