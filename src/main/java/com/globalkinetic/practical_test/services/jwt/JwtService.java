@@ -27,7 +27,6 @@ public class JwtService {
 
     private final SecretKey key;
     private final long expirationMs;
-    private BlacklistedTokenRepository jwtRepository;
 
     public JwtService(@Value("${jwt.secret}") String secret, @Value("${jwt.expiration-ms}") Duration expiration) {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
@@ -37,11 +36,6 @@ public class JwtService {
 
         this.key = Keys.hmacShaKeyFor(keyBytes);
         this.expirationMs = expiration.toMillis();
-    }
-
-    @Autowired
-    public void setJwtRepository(BlacklistedTokenRepository jwtRepository) {
-        this.jwtRepository = jwtRepository;
     }
 
     public String generateToken(String username) {

@@ -5,6 +5,7 @@ import com.globalkinetic.practical_test.dto.UserResponseDTO;
 import com.globalkinetic.practical_test.mappers.UserMapper;
 import com.globalkinetic.practical_test.models.User;
 import com.globalkinetic.practical_test.repository.UserRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,26 +15,12 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    private UserRepo userRepo;
-    private UserMapper userMapper;
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    @Autowired
-    public void setUserMapper(UserMapper userMapper) {
-        this.userMapper = userMapper;
-    }
-
-    @Autowired
-    public void setUserRepo(UserRepo userRepo) {
-        this.userRepo = userRepo;
-    }
+    private final UserRepo userRepo;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     public void createUser(UserRequestDTO userReq) {
         User user = userMapper.toUserEntity(userReq);

@@ -1,0 +1,57 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class AuthService
+interface BaseMapper<S, T> << interface >>
+class BlacklistedToken
+interface BlacklistedTokenRepository << interface >>
+class CredentialsRequiredException
+entity ErrorResponseDTO << record >>
+class GlobalExceptionHandler
+class JwtAuthenticationFilter
+class JwtBlacklistService
+class JwtService
+entity LoginRequestDTO << record >>
+entity LoginResponseDTO << record >>
+entity LogoutResponseDTO << record >>
+class PracticalTestApplication
+enum Role << enumeration >>
+class SecurityConfig
+class User
+class UserController
+entity UserDTO << record >>
+class UserDetailsServiceImpl
+interface UserMapper << interface >>
+class UserPrincipal
+interface UserRepo << interface >>
+entity UserRequestDTO << record >>
+entity UserResponseDTO << record >>
+class UserService
+class ValidationAspect
+
+AuthService                  "1" *-[#595959,plain]-> "jwtService\n1" JwtService                   
+AuthService                   -[#595959,dashed]->  LoginResponseDTO             : "«create»"
+JwtAuthenticationFilter      "1" *-[#595959,plain]-> "jwtBlacklistService\n1" JwtBlacklistService          
+JwtAuthenticationFilter      "1" *-[#595959,plain]-> "jwtService\n1" JwtService                   
+JwtAuthenticationFilter      "1" *-[#595959,plain]-> "userRepo\n1" UserRepo                     
+JwtBlacklistService           -[#595959,dashed]->  BlacklistedToken             : "«create»"
+JwtBlacklistService          "1" *-[#595959,plain]-> "blacklistedTokenRepository\n1" BlacklistedTokenRepository   
+JwtBlacklistService          "1" *-[#595959,plain]-> "jwtService\n1" JwtService                   
+JwtBlacklistService           -[#595959,dashed]->  LogoutResponseDTO            : "«create»"
+JwtService                   "1" *-[#595959,plain]-> "jwtRepository\n1" BlacklistedTokenRepository   
+User                         "1" *-[#595959,plain]-> "role\n1" Role                         
+UserController               "1" *-[#595959,plain]-> "authService\n1" AuthService                  
+UserController               "1" *-[#595959,plain]-> "jwtBlacklistService\n1" JwtBlacklistService          
+UserController               "1" *-[#595959,plain]-> "userService\n1" UserService                  
+UserDetailsServiceImpl        -[#595959,dashed]->  UserPrincipal                : "«create»"
+UserDetailsServiceImpl       "1" *-[#595959,plain]-> "userRepo\n1" UserRepo                     
+UserMapper                    -[#595959,dashed]->  UserResponseDTO              : "«create»"
+UserPrincipal                "1" *-[#595959,plain]-> "user\n1" User                         
+UserResponseDTO              "1" *-[#595959,plain]-> "users\n*" UserDTO                      
+UserService                  "1" *-[#595959,plain]-> "userMapper\n1" UserMapper                   
+UserService                  "1" *-[#595959,plain]-> "userRepo\n1" UserRepo                     
+ValidationAspect              -[#595959,dashed]->  CredentialsRequiredException : "«create»"
+@enduml

@@ -4,10 +4,12 @@ package com.globalkinetic.practical_test.services.jwt;
 import com.globalkinetic.practical_test.models.User;
 import com.globalkinetic.practical_test.repository.UserRepo;
 import com.globalkinetic.practical_test.services.UserDetailsServiceImpl;
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,36 +25,17 @@ import java.io.IOException;
  * @author Joesta
  */
 @Component
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private JwtService jwtService;
-    private UserRepo userRepo;
-    private ApplicationContext appContext;
-    private JwtBlacklistService jwtBlacklistService;
-
-
-    @Autowired
-    public void setJwtBlacklistService(JwtBlacklistService jwtBlacklistService) {
-        this.jwtBlacklistService = jwtBlacklistService;
-    }
-
-    @Autowired
-    public void setAppContext(ApplicationContext appContext) {
-        this.appContext = appContext;
-    }
-
-    @Autowired
-    public void setUserRepo(UserRepo userRepo) {
-        this.userRepo = userRepo;
-    }
-
-    @Autowired
-    public void setJwtService(JwtService jwtService) {
-        this.jwtService = jwtService;
-    }
+    private final JwtService jwtService;
+    private final UserRepo userRepo;
+    private final ApplicationContext appContext;
+    private final JwtBlacklistService jwtBlacklistService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+    protected void doFilterInternal(HttpServletRequest request, @Nonnull HttpServletResponse response, @Nonnull FilterChain filterChain) throws ServletException, IOException {
 
         String authorizationHeader = request.getHeader("Authorization");
         String token = null;
